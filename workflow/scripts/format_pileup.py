@@ -12,7 +12,7 @@ reference = pysam.FastaFile(args.reference_genome)
 
 print("\t".join(["contig", "position", "depth", "ref_base", "count_A", "count_C", "count_G", "count_T", "count_del", "alt_frequency"]))
 for pc in samfile.pileup(ignore_orphans=False):
-    freqs = {'A': 0, 'T': 0, 'G': 0, 'C': 0, '-': 0, 'R': 0 }
+    freqs = {'A': 0, 'T': 0, 'G': 0, 'C': 0, '-': 0, 'R': 0}
     for pr in pc.pileups:
         if pr.is_del:
             freqs['-'] += 1
@@ -20,7 +20,8 @@ for pc in samfile.pileup(ignore_orphans=False):
             freqs['R'] += 1
         else:
             b = pr.alignment.query_sequence[pr.query_position]
-            freqs[b] += 1
+            if b in freqs:
+                freqs[b] += 1
 
     reference_base = reference.fetch(pc.reference_name, pc.reference_pos, pc.reference_pos+1)
 
